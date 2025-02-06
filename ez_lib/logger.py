@@ -13,7 +13,7 @@ class BaseLogModule(Enum):
 class LogConfig:
     def __init__(
             self,
-            log_module_cls: type[BaseLogModule] | None,
+            log_module_cls: type[BaseLogModule] | None = None,
             log_level: int = logging.INFO,
             log_std_stream: TextIO | None = sys.stdout,
             log_file_path: str | None = None,
