@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ez-lib"
+license = { file = "LICENSE.md" }
+readme = "README.md"
+version = "0.1"
+description = "A custom Python library"
+authors = [
+    { name = "x0r0x" }
+]
+keywords = ["ez-lib"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/x0r0x/ez-lib"
+"Repository" = "https://github.com/x0r0x/ez-lib"
+
+[project.optional-dependencies]
+sqlalchemy = [
+    "SQLAlchemy",
+]
+
