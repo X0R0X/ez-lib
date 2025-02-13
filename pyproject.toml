@@ -7,6 +7,7 @@ name = "ez-lib"
 license = { file = "LICENSE.md" }
 readme = "README.md"
 description = "Collection of useful utilities"
+version="0.1"
 authors = [
     { name = "x0r0x" }
 ]
