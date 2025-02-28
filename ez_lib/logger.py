@@ -59,7 +59,7 @@ log_handlers = []
 log_config: LogConfig | None = LogConfig(BaseLogModule)
 
 
-def init_logging(config: LogConfig):
+def init_logging(config: LogConfig, mute_libs=True):
     global log_config
     d = globals()
     log_config = config
@@ -77,7 +77,8 @@ def init_logging(config: LogConfig):
             # directories already exist
             pass
 
-    set_lib_log_level()
+    if mute_libs:
+        set_lib_log_level()
 
 
 def get_logger(module: BaseLogModule = None, log_level=None) -> logging.Logger:

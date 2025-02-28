@@ -1,3 +1,4 @@
+import json
 import os
 import typing_extensions
 from typing import Union, get_origin, get_args, Optional
@@ -90,9 +91,7 @@ class BaseEnvConfig:
                 if env_var_name in typed.keys():
                     type_ = typed[env_var_name]
                     try:
-                        setattr(
-                            cls, env_var_name, type_(env_var_val)
-                        )
+                        setattr(cls, env_var_name, type_(env_var_val))
                     except ValueError:
                         raise InvalidAnnotatedType(
                             env_var_name, type_, env_var_val
@@ -159,3 +158,61 @@ class BaseEnvConfig:
                 return int(env_var)
             except ValueError:
                 return env_var
+
+
+class JsonFileConfig:
+    """
+    Set environment variables to class variables.
+
+    Declare class variables, these will be inferred from the environment and
+    will be typed either automatically or by declared type, e.g.:
+
+    environment:
+        export MY_FLOAT=3.14159
+        export MY_INT=42
+        export MY_STR=some_string
+        export MY_BOOL=True
+        export MY_BOOL2=false
+        export MY_TYPED_STR=false
+        export MY_TYPED_SET_OPT_BOOL=True
+        export MY_SET_OPT_FLOAT=1.618
+
+    python:
+        class MyConfig(BaseEnvConfig):
+            MY_FLOAT_VAR = None
+            MY_STR = None
+            MY_INT = None
+            MY_BOOL = None
+            MY_BOOL2 = None
+            MY_TYPED_STR: str = None
+            MY_TYPED_SET_OPT_BOOL:Optional[bool] = None
+            MY_TYPED_OPT_UNSET_INT: Optional[int] = None
+            MY_SET_OPT_FLOAT: Optional = None
+            MY_UNSET_OPT_FLOAT: Optional = None
+
+        MyConfig.init()
+
+    config_values:
+        {
+            'MY_FLOAT_VAR': 3.14159,
+            'MY_STR': 'some_string',
+            'MY_INT': 42,
+            'MY_BOOL': True,
+            'MY_BOOL2': False,
+            'MY_TYPED_STR': 'false',
+            'MY_TYPED_SET_OPT_BOOL': True,
+            'MY_TYPED_OPT_UNSET_INT': None,
+            'MY_SET_OPT_FLOAT': 1.618,
+            'MY_UNSET_OPT_FLOAT': None
+        }
+
+
+    If non-optional declared variables are not exported in the environment,
+    `EmptyEnvVarError` is thrown.
+
+    If the type is wrongly annotated, `InvalidAnnotatedType` is thrown.
+    """
+    def __init__(self, json_or_path: str):
+        if os.path.isfile(json_or_path):
+            with open(json_or_path) as f:
+                self._data = json.loads(f.read())
