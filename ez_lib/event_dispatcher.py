@@ -55,7 +55,8 @@ class EventDispatcher:
             self._log_non_existent_listener(event, callback)
 
     def dispatch_event(self, event: AbstractEvent, *args, **kwargs):
-        s = self._listeners.get(event)
+        s = self._listeners.get(event).copy()
+
         if s:
             for callback in s:
                 callback(*args, **kwargs)
