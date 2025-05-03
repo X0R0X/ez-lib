@@ -1,4 +1,3 @@
-from abc import ABC
 import contextlib
 from ez_lib.types import json_ser
 from logging import Logger
