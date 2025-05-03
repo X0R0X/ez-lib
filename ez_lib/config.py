@@ -1,3 +1,4 @@
+import json
 import os
 import typing_extensions
 from typing import Union, get_origin, get_args, Optional
@@ -90,9 +91,7 @@ class BaseEnvConfig:
                 if env_var_name in typed.keys():
                     type_ = typed[env_var_name]
                     try:
-                        setattr(
-                            cls, env_var_name, type_(env_var_val)
-                        )
+                        setattr(cls, env_var_name, type_(env_var_val))
                     except ValueError:
                         raise InvalidAnnotatedType(
                             env_var_name, type_, env_var_val
@@ -159,3 +158,13 @@ class BaseEnvConfig:
                 return int(env_var)
             except ValueError:
                 return env_var
+
+
+class JsonFileConfig:
+    """
+    # TODO
+    """
+    def __init__(self, json_or_path: str):
+        if os.path.isfile(json_or_path):
+            with open(json_or_path) as f:
+                self._data = json.loads(f.read())
